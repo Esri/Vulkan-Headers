@@ -1,10 +1,9 @@
 // Copyright 2015-2025 The Khronos Group Inc.
-// 
+//
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 //
 
 // This header is generated from the Khronos Vulkan XML API Registry.
-
 
 #ifndef VULKAN_HPP_MACROS_HPP
 #define VULKAN_HPP_MACROS_HPP
@@ -34,6 +33,18 @@
 #  include <version>
 #else
 #  include <ciso646>
+#endif
+
+#define VULKAN_HPP_STRINGIFY2( text ) #text
+#define VULKAN_HPP_STRINGIFY( text )  VULKAN_HPP_STRINGIFY2( text )
+#define VULKAN_HPP_NAMESPACE_STRING   VULKAN_HPP_STRINGIFY( VULKAN_HPP_NAMESPACE )
+
+#if defined( __clang__ ) || defined( __GNUC__ ) || defined( __GNUG__ )
+#  define VULKAN_HPP_COMPILE_WARNING( text ) _Pragma( VULKAN_HPP_STRINGIFY( GCC warning text ) )
+#elif defined( _MSC_VER )
+#  define VULKAN_HPP_COMPILE_WARNING( text ) _Pragma( VULKAN_HPP_STRINGIFY( message( __FILE__ "(" VULKAN_HPP_STRINGIFY( __LINE__ ) "): warning: " text ) ) )
+#else
+#  define VULKAN_HPP_COMPILE_WARNING( text )
 #endif
 
 #if defined( VULKAN_HPP_DISABLE_ENHANCED_MODE )
@@ -88,16 +99,17 @@
 #  define VULKAN_HPP_SUPPORT_SPAN
 #endif
 
-#if defined( __cpp_lib_modules ) && !defined( VULKAN_HPP_STD_MODULE ) && defined( VULKAN_HPP_ENABLE_STD_MODULE )
-#  define VULKAN_HPP_STD_MODULE std.compat
+#if defined( VULKAN_HPP_CXX_MODULE ) && !( defined( __cpp_modules ) && defined( __cpp_lib_modules ) )
+VULKAN_HPP_COMPILE_WARNING( "This is a non-conforming implementation of C++ named modules and the standard library module." )
 #endif
 
 #ifndef VK_USE_64_BIT_PTR_DEFINES
-    #if defined(__LP64__) || defined(_WIN64) || (defined(__x86_64__) && !defined(__ILP32__) ) || defined(_M_X64) || defined(__ia64) || defined (_M_IA64) || defined(__aarch64__) || defined(__powerpc64__) || (defined(__riscv) && __riscv_xlen == 64)
-        #define VK_USE_64_BIT_PTR_DEFINES 1
-    #else
-        #define VK_USE_64_BIT_PTR_DEFINES 0
-    #endif
+#  if defined( __LP64__ ) || defined( _WIN64 ) || ( defined( __x86_64__ ) && !defined( __ILP32__ ) ) || defined( _M_X64 ) || defined( __ia64 ) || \
+    defined( _M_IA64 ) || defined( __aarch64__ ) || defined( __powerpc64__ ) || ( defined( __riscv ) && __riscv_xlen == 64 )
+#    define VK_USE_64_BIT_PTR_DEFINES 1
+#  else
+#    define VK_USE_64_BIT_PTR_DEFINES 0
+#  endif
 #endif
 
 // 32-bit vulkan is not typesafe for non-dispatchable handles, so don't allow copy constructors on this platform by default.
@@ -157,6 +169,11 @@
 #    define VULKAN_HPP_CONSTEXPR_14 constexpr
 #  else
 #    define VULKAN_HPP_CONSTEXPR_14
+#  endif
+#  if 201603 <= __cpp_constexpr
+#    define VULKAN_HPP_CONSTEXPR_17 constexpr
+#  else
+#    define VULKAN_HPP_CONSTEXPR_17
 #  endif
 #  if ( 201907 <= __cpp_constexpr ) && ( !defined( __GNUC__ ) || ( 110400 < GCC_VERSION ) )
 #    define VULKAN_HPP_CONSTEXPR_20 constexpr
@@ -220,10 +237,6 @@
 #  define VULKAN_HPP_NAMESPACE vk
 #endif
 
-#define VULKAN_HPP_STRINGIFY2( text ) #text
-#define VULKAN_HPP_STRINGIFY( text )  VULKAN_HPP_STRINGIFY2( text )
-#define VULKAN_HPP_NAMESPACE_STRING   VULKAN_HPP_STRINGIFY( VULKAN_HPP_NAMESPACE )
-
 #if !defined( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC )
 #  if defined( VK_NO_PROTOTYPES )
 #    define VULKAN_HPP_DISPATCH_LOADER_DYNAMIC 1
@@ -259,7 +272,7 @@ namespace VULKAN_HPP_NAMESPACE
 {
   namespace detail
   {
-	  class DispatchLoaderDynamic;
+    class DispatchLoaderDynamic;
 
 #if !defined( VULKAN_HPP_DEFAULT_DISPATCHER )
 #  if VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1
@@ -268,6 +281,21 @@ namespace VULKAN_HPP_NAMESPACE
 #endif
   }  // namespace detail
 }  // namespace VULKAN_HPP_NAMESPACE
+
+#if !defined( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC_TYPE )
+#  define VULKAN_HPP_DISPATCH_LOADER_DYNAMIC_TYPE VULKAN_HPP_NAMESPACE::detail::DispatchLoaderDynamic
+#endif
+#if !defined( VULKAN_HPP_DISPATCH_LOADER_STATIC_TYPE )
+#  define VULKAN_HPP_DISPATCH_LOADER_STATIC_TYPE VULKAN_HPP_NAMESPACE::detail::DispatchLoaderStatic
+#endif
+
+#if !defined( VULKAN_HPP_DEFAULT_DISPATCHER_TYPE )
+#  if VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1
+#    define VULKAN_HPP_DEFAULT_DISPATCHER_TYPE VULKAN_HPP_DISPATCH_LOADER_DYNAMIC_TYPE
+#  else
+#    define VULKAN_HPP_DEFAULT_DISPATCHER_TYPE VULKAN_HPP_DISPATCH_LOADER_STATIC_TYPE
+#  endif
+#endif
 
 #if !defined( VULKAN_HPP_DEFAULT_DISPATCHER )
 #  if VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1
@@ -286,42 +314,16 @@ namespace VULKAN_HPP_NAMESPACE
 #  endif
 #endif
 
-#if !defined( VULKAN_HPP_DEFAULT_DISPATCHER_TYPE )
-#  if VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1
-#    define VULKAN_HPP_DEFAULT_DISPATCHER_TYPE ::VULKAN_HPP_NAMESPACE::detail::DispatchLoaderDynamic
-#  else
-#    define VULKAN_HPP_DEFAULT_DISPATCHER_TYPE ::VULKAN_HPP_NAMESPACE::detail::DispatchLoaderStatic
-#  endif
-#endif
-
 #if defined( VULKAN_HPP_NO_DEFAULT_DISPATCHER )
-#  define VULKAN_HPP_DEFAULT_ARGUMENT_ASSIGNMENT
-#  define VULKAN_HPP_DEFAULT_ARGUMENT_NULLPTR_ASSIGNMENT
-#  define VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT
+#  define VULKAN_HPP_DEFAULT_ASSIGNMENT( assignment )
 #else
-#  define VULKAN_HPP_DEFAULT_ARGUMENT_ASSIGNMENT         = {}
-#  define VULKAN_HPP_DEFAULT_ARGUMENT_NULLPTR_ASSIGNMENT = nullptr
-#  define VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT       = VULKAN_HPP_DEFAULT_DISPATCHER
+#  define VULKAN_HPP_DEFAULT_ASSIGNMENT( assignment ) = assignment
 #endif
-
-#if !defined( VULKAN_HPP_EXPECTED ) && ( 23 <= VULKAN_HPP_CPP_VERSION ) && defined( __cpp_lib_expected )
-#  if !( defined( VULKAN_HPP_ENABLE_STD_MODULE ) && defined( VULKAN_HPP_STD_MODULE ) )
-#    include <expected>
-#  endif
-#  define VULKAN_HPP_EXPECTED   std::expected
-#  define VULKAN_HPP_UNEXPECTED std::unexpected
-#endif
+#define VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT VULKAN_HPP_DEFAULT_ASSIGNMENT( VULKAN_HPP_DEFAULT_DISPATCHER )
 
 #if !defined( VULKAN_HPP_RAII_NAMESPACE )
-#  define VULKAN_HPP_RAII_NAMESPACE raii
+#  define VULKAN_HPP_RAII_NAMESPACE        raii
+#  define VULKAN_HPP_RAII_NAMESPACE_STRING VULKAN_HPP_STRINGIFY( VULKAN_HPP_NAMESPACE::VULKAN_HPP_RAII_NAMESPACE )
 #endif
-
-#if defined( VULKAN_HPP_NO_EXCEPTIONS ) && defined( VULKAN_HPP_EXPECTED )
-#  define VULKAN_HPP_RAII_NO_EXCEPTIONS
-#  define VULKAN_HPP_RAII_CREATE_NOEXCEPT noexcept
-#else
-#  define VULKAN_HPP_RAII_CREATE_NOEXCEPT
-#endif
-
 
 #endif
