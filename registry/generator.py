@@ -1,6 +1,6 @@
 #!/usr/bin/env python3 -i
 #
-# Copyright 2013-2025 The Khronos Group Inc.
+# Copyright 2013-2026 The Khronos Group Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 """Base class for source/header/doc generators, as well as some utility functions."""
@@ -50,65 +50,50 @@ def enquote(s):
     return None
 
 
-def regSortCategoryKey(feature):
-    """Sort key for regSortFeatures.
-    Sorts by category of the feature name string:
+def regSortFeatures(orderedFeatureNames, features):
+    """Default sort procedure for generated features.
 
-    - Core API features (those defined with a `<feature>` tag)
-        - (sort VKSC after VK - this is Vulkan-specific)
-    - ARB/KHR/OES (Khronos extensions)
-    - other       (EXT/vendor extensions)"""
-
-    if feature.elem.tag == 'feature':
-        if feature.name.startswith('VKSC'):
-            return 0.5
-        else:
-            return 0
-
-    if feature.category.upper() in ('ARB', 'KHR', 'OES'):
-        return 1
-
-    return 2
-
-
-def regSortOrderKey(feature):
-    """Sort key for regSortFeatures - key is the sortorder attribute."""
-
-    return feature.sortorder
-
-
-def regSortNameKey(feature):
-    """Sort key for regSortFeatures - key is the extension name."""
-
-    return feature.name
-
-
-def regSortFeatureVersionKey(feature):
-    """Sort key for regSortFeatures - key is the feature version.
-    `<extension>` elements all have version number 0."""
-
-    return float(feature.versionNumber)
-
-
-def regSortExtensionNumberKey(feature):
-    """Sort key for regSortFeatures - key is the extension number.
-    `<feature>` elements all have extension number 0."""
-
-    return int(feature.number)
-
-
-def regSortFeatures(featureList):
-    """Default sort procedure for features.
+    - orderedFeatureNames - list of feature / extension names to sort
+    - features - dictionary of FeatureInfo keyed by names
 
     - Sorts by explicit sort order (default 0) relative to other features
     - then by feature category ('feature' or 'extension'),
     - then by version number (for features)
     - then by extension number (for extensions)"""
-    featureList.sort(key=regSortExtensionNumberKey)
-    featureList.sort(key=regSortFeatureVersionKey)
-    featureList.sort(key=regSortCategoryKey)
-    featureList.sort(key=regSortOrderKey)
 
+    # Sort by extension numbers; <feature>s all have extension number 0
+    orderedFeatureNames.sort(key=lambda name: int(features[name].number))
+
+    # Sort by feature version; <extension>s all have version number 0
+    orderedFeatureNames.sort(key=lambda name: float(features[name].versionNumber))
+
+    # Sort by feature name category
+    def categoryKey(feature):
+        """Helper function, too long to put in a sort key lambda
+
+        - feature - FeatureInfo containing the XML element to sort
+
+        Sorts by:
+
+        - Core API features (those defined with a `<feature>` tag)
+        - Sort VKSC core features after VK - Vulkan-specific
+        - ARB/KHR/OES (Khronos extensions)
+        - other       (EXT/vendor extensions)"""
+
+        if feature.elem.tag == 'feature':
+            if feature.name.startswith('VKSC'):
+                return 0.5
+            else:
+                return 0
+        elif feature.category.upper() in ('ARB', 'KHR', 'OES'):
+            return 1
+        else:
+            return 2
+
+    orderedFeatureNames.sort(key=lambda name: categoryKey(features[name]))
+
+    # Sort by sortorder attribute
+    orderedFeatureNames.sort(key=lambda name: features[name].sortorder)
 
 class MissingGeneratorOptionsError(RuntimeError):
     """Error raised when a Generator tries to do something that requires GeneratorOptions but it is None."""
@@ -153,6 +138,7 @@ class GeneratorOptions:
                  genpath=None,
                  apiname=None,
                  mergeApiNames=None,
+                 mergeInternalApis=True,
                  profile=None,
                  versions='.*',
                  emitversions='.*',
@@ -179,6 +165,7 @@ class GeneratorOptions:
         - apiname - string matching `<api>` 'apiname' attribute, e.g. 'gl'.
         - mergeApiNames - If not None, a comma separated list of API names
           to merge into the API specified by 'apiname'
+        - mergeInternalApis - whether to merge internal APIs into public APIs
         - profile - string specifying API profile , e.g. 'core', or None.
         - versions - regex matching API versions to process interfaces for.
         Normally `'.*'` or `'[0-9][.][0-9]'` to match all defined versions.
@@ -239,6 +226,9 @@ class GeneratorOptions:
 
         self.mergeApiNames = mergeApiNames
         "comma separated list of API names to merge into the API specified by 'apiname'"
+
+        self.mergeInternalApis = mergeInternalApis
+        "whether to merge internal APIs into public APIs"
 
         self.profile = profile
         "string specifying API profile , e.g. 'core', or None."
@@ -587,14 +577,14 @@ class OutputGenerator:
             name = elem.get('name')
 
         if reason == 'aliased':
-            return f'{padding}// {name} is a deprecated alias\n'
+            return f'{padding}// {name} is a legacy alias\n'
         elif reason == 'ignored':
-            return f'{padding}// {name} is deprecated and should not be used\n'
+            return f'{padding}// {name} is legacy and should not be used\n'
         elif reason == 'true':
-            return f'{padding}// {name} is deprecated, but no reason was given in the API XML\n'
+            return f'{padding}// {name} is legacy, but no reason was given in the API XML\n'
         else:
             # This can be caught by schema validation
-            self.logMsg('error', f"{name} has an unknown deprecation attribute value '{reason}'")
+            self.logMsg('error', f"{name} has an unknown legacy attribute value '{reason}'")
             exit(1)
 
     def buildEnumCDecl(self, expand, groupinfo, groupName):
@@ -1098,11 +1088,19 @@ class OutputGenerator:
             raise MissingGeneratorOptionsError()
         return self.genOpts.apientry + name + tail
 
-    def makeTypedefName(self, name, tail):
-        """Make the function-pointer typedef name for a command."""
+    def makeTypedefName(self, name, tail, isfuncpointer):
+        """Make the function-pointer typedef name for a command or
+           funcpointer name.
+           If this is a function pointer <type> tag, do not prepend a PFN_
+           to the name, as that is actually the type name and already
+           included.
+        """
         if self.genOpts is None:
             raise MissingGeneratorOptionsError()
-        return f"({self.genOpts.apientryp}PFN_{name}{tail})"
+
+        prefix = '' if isfuncpointer else 'PFN_'
+
+        return f'({self.genOpts.apientryp}{prefix}{name}{tail})'
 
     def makeCParamDecl(self, param, aligncol):
         """Return a string which is an indented, formatted
@@ -1330,11 +1328,15 @@ class OutputGenerator:
 
     def makeCDecls(self, cmd):
         """Return C prototype and function pointer typedef for a
-        `<command>` Element, as a two-element list of strings.
+        `<command>` or `type category="funcpointer"` Element, as a
+        two-element list of strings [prototype, typedef].
 
-        - cmd - Element containing a `<command>` tag"""
+        - cmd - Element containing a command or funcpointer tag"""
         if self.genOpts is None:
             raise MissingGeneratorOptionsError()
+
+        isfuncpointer = (cmd.tag == 'type')
+
         proto = cmd.find('proto')
         params = cmd.findall('param')
         # Begin accumulating prototype and typedef strings
@@ -1358,7 +1360,7 @@ class OutputGenerator:
             tail = noneStr(elem.tail)
             if elem.tag == 'name':
                 pdecl += self.makeProtoName(text, tail)
-                tdecl += self.makeTypedefName(text, tail)
+                tdecl += self.makeTypedefName(text, tail, isfuncpointer)
             else:
                 pdecl += text + tail
                 tdecl += text + tail
@@ -1373,8 +1375,8 @@ class OutputGenerator:
         # a <param> node without the tags. No tree walking required
         # since all tags are ignored.
         # Uses: self.indentFuncProto
-        # self.indentFuncPointer
-        # self.alignFuncParam
+        #       self.indentFuncPointer
+        #       self.alignFuncParam
         n = len(params)
         # Indented parameters
         if n > 0:
@@ -1413,7 +1415,13 @@ class OutputGenerator:
         else:
             paramdecl += 'void'
         paramdecl += ");"
-        return [pdecl + indentdecl, tdecl + paramdecl]
+
+        # For funcpointer types, only the typedef is returned,
+        # and it is formatted more attractively.
+        if isfuncpointer:
+            return [None, tdecl + indentdecl]
+        else:
+            return [pdecl + indentdecl, tdecl + paramdecl]
 
     def newline(self):
         """Print a newline to the output file (utility function)"""
