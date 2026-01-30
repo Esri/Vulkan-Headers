@@ -5,7 +5,7 @@ from conans import ConanFile
 
 class VulkanHeadersConan(ConanFile):
     name = "Vulkan-Headers"
-    version = "1.4.316"
+    version = "1.4.341"
     url = "https://github.com/Esri/Vulkan-Headers/blob/runtimecore/"
     license = "https://github.com/Esri/Vulkan-Headers/blob/runtimecore/LICENSE.md"
     description = ("Vulkan header files and API registry")
