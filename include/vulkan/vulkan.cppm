@@ -24,16 +24,16 @@ VULKAN_HPP_COMPILE_WARNING( VULKAN_HPP_CXX_MODULE_EXPERIMENTAL_WARNING )
 
 export module vulkan;
 
-export import std;
+import std;
 
-VULKAN_HPP_STATIC_ASSERT( VK_HEADER_VERSION == 353, "Wrong VK_HEADER_VERSION!" );
+VULKAN_HPP_STATIC_ASSERT( VK_HEADER_VERSION == 360, "Wrong VK_HEADER_VERSION!" );
 
-#if defined( _MSC_VER )
-#  pragma warning( push )
-#  pragma warning( disable : 5244 )
-#elif defined( __clang__ )
+#if defined( __clang__ )
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Winclude-angled-in-module-purview"
+#elif defined( _MSC_VER )
+#  pragma warning( push )
+#  pragma warning( disable : 5244 )
 #elif defined( __GNUC__ )
 #endif
 
@@ -44,10 +44,10 @@ VULKAN_HPP_STATIC_ASSERT( VK_HEADER_VERSION == 353, "Wrong VK_HEADER_VERSION!" )
 #include <vulkan/vulkan_raii.hpp>
 #include <vulkan/vulkan_shared.hpp>
 
-#if defined( _MSC_VER )
-#  pragma warning( pop )
-#elif defined( __clang__ )
+#if defined( __clang__ )
 #  pragma clang diagnostic pop
+#elif defined( _MSC_VER )
+#  pragma warning( pop )
 #elif defined( __GNUC__ )
 #endif
 
@@ -907,6 +907,15 @@ export
   using ::PFN_vkCmdDispatchTileQCOM;
   using ::PFN_vkCmdEndPerTileExecutionQCOM;
 
+  //=== VK_NV_low_latency ===
+  using ::PFN_vkGetLatencyTimingsLegacyNV;
+  using ::PFN_vkGetSleepStatusLegacyNV;
+  using ::PFN_vkLatencySleepLegacyNV;
+  using ::PFN_vkQueueNotifyOutOfBandLegacyNV;
+  using ::PFN_vkSetLatencyMarkerLegacyNV;
+  using ::PFN_vkSetLatencySleepModeLegacyNV;
+  using ::PFN_vkShutdownLatencyDeviceLegacyNV;
+
 #if defined( VK_USE_PLATFORM_METAL_EXT )
   //=== VK_EXT_metal_objects ===
   using ::PFN_vkExportMetalObjectsEXT;
@@ -1325,6 +1334,9 @@ export
 
   //=== VK_NV_compute_occupancy_priority ===
   using ::PFN_vkCmdSetComputeOccupancyPriorityNV;
+
+  //=== VK_EXT_cooperative_matrix_maintenance1 ===
+  using ::PFN_vkGetPhysicalDeviceCooperativeMatrixProperties2EXT;
 
 #if defined( VK_USE_PLATFORM_UBM_SEC )
   //=== VK_SEC_ubm_surface ===
