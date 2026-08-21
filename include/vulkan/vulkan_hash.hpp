@@ -3124,6 +3124,25 @@ VULKAN_HPP_EXPORT namespace std
   };
 
   template <>
+  struct hash<VULKAN_HPP_NAMESPACE::CooperativeMatrixProperties2EXT>
+  {
+    std::size_t operator()( VULKAN_HPP_NAMESPACE::CooperativeMatrixProperties2EXT const & cooperativeMatrixProperties2EXT ) const VULKAN_HPP_NOEXCEPT
+    {
+      std::size_t seed = 0;
+      VULKAN_HPP_HASH_COMBINE( seed, cooperativeMatrixProperties2EXT.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, cooperativeMatrixProperties2EXT.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, cooperativeMatrixProperties2EXT.MGranularity );
+      VULKAN_HPP_HASH_COMBINE( seed, cooperativeMatrixProperties2EXT.NGranularity );
+      VULKAN_HPP_HASH_COMBINE( seed, cooperativeMatrixProperties2EXT.KGranularity );
+      VULKAN_HPP_HASH_COMBINE( seed, cooperativeMatrixProperties2EXT.AType );
+      VULKAN_HPP_HASH_COMBINE( seed, cooperativeMatrixProperties2EXT.BType );
+      VULKAN_HPP_HASH_COMBINE( seed, cooperativeMatrixProperties2EXT.CType );
+      VULKAN_HPP_HASH_COMBINE( seed, cooperativeMatrixProperties2EXT.ResultType );
+      return seed;
+    }
+  };
+
+  template <>
   struct hash<VULKAN_HPP_NAMESPACE::CooperativeMatrixPropertiesKHR>
   {
     std::size_t operator()( VULKAN_HPP_NAMESPACE::CooperativeMatrixPropertiesKHR const & cooperativeMatrixPropertiesKHR ) const VULKAN_HPP_NOEXCEPT
@@ -8072,6 +8091,19 @@ VULKAN_HPP_EXPORT namespace std
   };
 
   template <>
+  struct hash<VULKAN_HPP_NAMESPACE::ImageTilingControlCreateInfoEXT>
+  {
+    std::size_t operator()( VULKAN_HPP_NAMESPACE::ImageTilingControlCreateInfoEXT const & imageTilingControlCreateInfoEXT ) const VULKAN_HPP_NOEXCEPT
+    {
+      std::size_t seed = 0;
+      VULKAN_HPP_HASH_COMBINE( seed, imageTilingControlCreateInfoEXT.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, imageTilingControlCreateInfoEXT.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, imageTilingControlCreateInfoEXT.tilingControl );
+      return seed;
+    }
+  };
+
+  template <>
   struct hash<VULKAN_HPP_NAMESPACE::ImageUsageFlags2CreateInfoKHR>
   {
     std::size_t operator()( VULKAN_HPP_NAMESPACE::ImageUsageFlags2CreateInfoKHR const & imageUsageFlags2CreateInfoKHR ) const VULKAN_HPP_NOEXCEPT
@@ -10569,6 +10601,41 @@ VULKAN_HPP_EXPORT namespace std
   };
 
   template <>
+  struct hash<VULKAN_HPP_NAMESPACE::PhysicalDeviceCooperativeMatrixInfo2EXT>
+  {
+    std::size_t
+      operator()( VULKAN_HPP_NAMESPACE::PhysicalDeviceCooperativeMatrixInfo2EXT const & physicalDeviceCooperativeMatrixInfo2EXT ) const VULKAN_HPP_NOEXCEPT
+    {
+      std::size_t seed = 0;
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixInfo2EXT.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixInfo2EXT.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixInfo2EXT.scope );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixInfo2EXT.invocations );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixInfo2EXT.subgroupSize );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixInfo2EXT.flags );
+      return seed;
+    }
+  };
+
+  template <>
+  struct hash<VULKAN_HPP_NAMESPACE::PhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT>
+  {
+    std::size_t operator()( VULKAN_HPP_NAMESPACE::PhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT const &
+                              physicalDeviceCooperativeMatrixMaintenance1FeaturesEXT ) const VULKAN_HPP_NOEXCEPT
+    {
+      std::size_t seed = 0;
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixMaintenance1FeaturesEXT.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixMaintenance1FeaturesEXT.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixMaintenance1FeaturesEXT.cooperativeMatrixProperties2 );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixMaintenance1FeaturesEXT.cooperativeMatrixReductions );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixMaintenance1FeaturesEXT.cooperativeMatrixConversions );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixMaintenance1FeaturesEXT.cooperativeMatrixPerElementOperations );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceCooperativeMatrixMaintenance1FeaturesEXT.cooperativeMatrixGetCoordinate );
+      return seed;
+    }
+  };
+
+  template <>
   struct hash<VULKAN_HPP_NAMESPACE::PhysicalDeviceCooperativeMatrixPropertiesKHR>
   {
     std::size_t operator()( VULKAN_HPP_NAMESPACE::PhysicalDeviceCooperativeMatrixPropertiesKHR const & physicalDeviceCooperativeMatrixPropertiesKHR ) const
@@ -12608,6 +12675,20 @@ VULKAN_HPP_EXPORT namespace std
       VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceImageSlicedViewOf3DFeaturesEXT.sType );
       VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceImageSlicedViewOf3DFeaturesEXT.pNext );
       VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceImageSlicedViewOf3DFeaturesEXT.imageSlicedViewOf3D );
+      return seed;
+    }
+  };
+
+  template <>
+  struct hash<VULKAN_HPP_NAMESPACE::PhysicalDeviceImageTilingControlFeaturesEXT>
+  {
+    std::size_t operator()( VULKAN_HPP_NAMESPACE::PhysicalDeviceImageTilingControlFeaturesEXT const & physicalDeviceImageTilingControlFeaturesEXT ) const
+      VULKAN_HPP_NOEXCEPT
+    {
+      std::size_t seed = 0;
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceImageTilingControlFeaturesEXT.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceImageTilingControlFeaturesEXT.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceImageTilingControlFeaturesEXT.imageTilingControl );
       return seed;
     }
   };
@@ -15614,6 +15695,24 @@ VULKAN_HPP_EXPORT namespace std
       VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderMultipleWaitQueuesPropertiesQCOM.sType );
       VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderMultipleWaitQueuesPropertiesQCOM.pNext );
       VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderMultipleWaitQueuesPropertiesQCOM.maxShaderWaitQueues );
+      return seed;
+    }
+  };
+
+  template <>
+  struct hash<VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT>
+  {
+    std::size_t
+      operator()( VULKAN_HPP_NAMESPACE::PhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT const & physicalDeviceShaderOCPMicroscalingTypesFeaturesEXT ) const
+      VULKAN_HPP_NOEXCEPT
+    {
+      std::size_t seed = 0;
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderOCPMicroscalingTypesFeaturesEXT.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderOCPMicroscalingTypesFeaturesEXT.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderOCPMicroscalingTypesFeaturesEXT.shaderFloat4 );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderOCPMicroscalingTypesFeaturesEXT.shaderFloat6 );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderOCPMicroscalingTypesFeaturesEXT.shaderFloat8UnsignedE8M0 );
+      VULKAN_HPP_HASH_COMBINE( seed, physicalDeviceShaderOCPMicroscalingTypesFeaturesEXT.shaderMXInt8 );
       return seed;
     }
   };
@@ -20550,6 +20649,24 @@ VULKAN_HPP_EXPORT namespace std
   };
 
   template <>
+  struct hash<VULKAN_HPP_NAMESPACE::TensorExplicitTilingFormatPropertiesARM>
+  {
+    std::size_t
+      operator()( VULKAN_HPP_NAMESPACE::TensorExplicitTilingFormatPropertiesARM const & tensorExplicitTilingFormatPropertiesARM ) const VULKAN_HPP_NOEXCEPT
+    {
+      std::size_t seed = 0;
+      VULKAN_HPP_HASH_COMBINE( seed, tensorExplicitTilingFormatPropertiesARM.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, tensorExplicitTilingFormatPropertiesARM.pNext );
+      VULKAN_HPP_HASH_COMBINE( seed, tensorExplicitTilingFormatPropertiesARM.brick16TilingTensorFeatures );
+      VULKAN_HPP_HASH_COMBINE( seed, tensorExplicitTilingFormatPropertiesARM.brick8TilingTensorFeatures );
+      VULKAN_HPP_HASH_COMBINE( seed, tensorExplicitTilingFormatPropertiesARM.brick4TilingTensorFeatures );
+      VULKAN_HPP_HASH_COMBINE( seed, tensorExplicitTilingFormatPropertiesARM.blockUTilingTensorFeatures );
+      VULKAN_HPP_HASH_COMBINE( seed, tensorExplicitTilingFormatPropertiesARM.blockU64kTilingTensorFeatures );
+      return seed;
+    }
+  };
+
+  template <>
   struct hash<VULKAN_HPP_NAMESPACE::TensorFormatPropertiesARM>
   {
     std::size_t operator()( VULKAN_HPP_NAMESPACE::TensorFormatPropertiesARM const & tensorFormatPropertiesARM ) const VULKAN_HPP_NOEXCEPT
@@ -20572,6 +20689,22 @@ VULKAN_HPP_EXPORT namespace std
       VULKAN_HPP_HASH_COMBINE( seed, tensorMemoryRequirementsInfoARM.sType );
       VULKAN_HPP_HASH_COMBINE( seed, tensorMemoryRequirementsInfoARM.pNext );
       VULKAN_HPP_HASH_COMBINE( seed, tensorMemoryRequirementsInfoARM.tensor );
+      return seed;
+    }
+  };
+
+  template <>
+  struct hash<VULKAN_HPP_NAMESPACE::TensorRollingBackingCreateInfoARM>
+  {
+    std::size_t operator()( VULKAN_HPP_NAMESPACE::TensorRollingBackingCreateInfoARM const & tensorRollingBackingCreateInfoARM ) const VULKAN_HPP_NOEXCEPT
+    {
+      std::size_t seed = 0;
+      VULKAN_HPP_HASH_COMBINE( seed, tensorRollingBackingCreateInfoARM.sType );
+      VULKAN_HPP_HASH_COMBINE( seed, tensorRollingBackingCreateInfoARM.pNext );
+      for ( size_t i = 0; i < VK_MAX_TENSOR_CREATE_INFO_ROLLING_BACKING_WRAP_COUNT_ARM; ++i )
+      {
+        VULKAN_HPP_HASH_COMBINE( seed, tensorRollingBackingCreateInfoARM.wraps[i] );
+      }
       return seed;
     }
   };

@@ -2182,6 +2182,10 @@ VULKAN_HPP_EXPORT namespace VULKAN_HPP_NAMESPACE
   //=== VK_EXT_shader_replicated_composites ===
   struct PhysicalDeviceShaderReplicatedCompositesFeaturesEXT;
 
+  //=== VK_ARM_tensor_controls ===
+  struct TensorRollingBackingCreateInfoARM;
+  struct TensorExplicitTilingFormatPropertiesARM;
+
   //=== VK_EXT_shader_float8 ===
   struct PhysicalDeviceShaderFloat8FeaturesEXT;
 
@@ -2439,6 +2443,11 @@ VULKAN_HPP_EXPORT namespace VULKAN_HPP_NAMESPACE
   struct PhysicalDeviceMaintenance11FeaturesKHR;
   struct QueueFamilyOptimalImageTransferGranularityPropertiesKHR;
 
+  //=== VK_EXT_cooperative_matrix_maintenance1 ===
+  struct CooperativeMatrixProperties2EXT;
+  struct PhysicalDeviceCooperativeMatrixInfo2EXT;
+  struct PhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT;
+
   //=== VK_EXT_shader_subgroup_partitioned ===
   struct PhysicalDeviceShaderSubgroupPartitionedFeaturesEXT;
 
@@ -2456,6 +2465,9 @@ VULKAN_HPP_EXPORT namespace VULKAN_HPP_NAMESPACE
   struct ImageStencilUsage2CreateInfoKHR;
   struct SharedPresentSurfaceCapabilities2KHR;
 
+  //=== VK_EXT_shader_ocp_microscaling_types ===
+  struct PhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT;
+
   //=== VK_VALVE_shader_mixed_float_dot_product ===
   struct PhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE;
 
@@ -2470,6 +2482,10 @@ VULKAN_HPP_EXPORT namespace VULKAN_HPP_NAMESPACE
 
   //=== VK_EXT_primitive_restart_index ===
   struct PhysicalDevicePrimitiveRestartIndexFeaturesEXT;
+
+  //=== VK_EXT_image_tiling_control ===
+  struct PhysicalDeviceImageTilingControlFeaturesEXT;
+  struct ImageTilingControlCreateInfoEXT;
 
   //=== VK_NV_cooperative_matrix_decode_vector ===
   struct PhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV;
@@ -12059,6 +12075,14 @@ VULKAN_HPP_EXPORT namespace VULKAN_HPP_NAMESPACE
       setPerfHintQCOM( PerfHintInfoQCOM const & perfHintInfo, Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const;
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
+    //=== VK_NV_low_latency ===
+
+    // wrapper function for command vkQueueNotifyOutOfBandLegacyNV, see
+    // https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueNotifyOutOfBandLegacyNV.html
+    template <typename Dispatch                                                                    = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE,
+              typename std::enable_if<IS_DISPATCHED( vkQueueNotifyOutOfBandLegacyNV ), bool>::type = true>
+    void notifyOutOfBandLegacyNV( uint32_t queueType, Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+
     //=== VK_KHR_synchronization2 ===
 
     // wrapper function for command vkQueueSubmit2KHR, see https://registry.khronos.org/vulkan/specs/latest/man/html/vkQueueSubmit2KHR.html
@@ -17941,6 +17965,52 @@ VULKAN_HPP_EXPORT namespace VULKAN_HPP_NAMESPACE
 #  endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 #endif   /*VK_ENABLE_BETA_EXTENSIONS*/
 
+    //=== VK_NV_low_latency ===
+
+    // wrapper function for command vkSetLatencySleepModeLegacyNV, see
+    // https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetLatencySleepModeLegacyNV.html
+    template <typename Dispatch                                                                   = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE,
+              typename std::enable_if<IS_DISPATCHED( vkSetLatencySleepModeLegacyNV ), bool>::type = true>
+    void setLatencySleepModeLegacyNV( Bool32             lowLatencyMode,
+                                      Bool32             lowLatencyBoost,
+                                      uint32_t           minimumIntervalUs,
+                                      Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+
+    // wrapper function for command vkLatencySleepLegacyNV, see https://registry.khronos.org/vulkan/specs/latest/man/html/vkLatencySleepLegacyNV.html
+    template <typename Dispatch = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE, typename std::enable_if<IS_DISPATCHED( vkLatencySleepLegacyNV ), bool>::type = true>
+    void
+      latencySleepLegacyNV( Semaphore signalSemaphore, uint64_t value, Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+
+    // wrapper function for command vkSetLatencyMarkerLegacyNV, see https://registry.khronos.org/vulkan/specs/latest/man/html/vkSetLatencyMarkerLegacyNV.html
+    template <typename Dispatch = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE, typename std::enable_if<IS_DISPATCHED( vkSetLatencyMarkerLegacyNV ), bool>::type = true>
+    void setLatencyMarkerLegacyNV( uint64_t frameID, uint32_t marker, Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+
+    // wrapper function for command vkGetLatencyTimingsLegacyNV, see https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetLatencyTimingsLegacyNV.html
+    template <typename Dispatch = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE, typename std::enable_if<IS_DISPATCHED( vkGetLatencyTimingsLegacyNV ), bool>::type = true>
+    void getLatencyTimingsLegacyNV( void * pTimings, Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+#ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
+    // wrapper function for command vkGetLatencyTimingsLegacyNV, see https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetLatencyTimingsLegacyNV.html
+    template <typename TimingsType,
+              typename Dispatch                                                                 = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE,
+              typename std::enable_if<IS_DISPATCHED( vkGetLatencyTimingsLegacyNV ), bool>::type = true>
+    VULKAN_HPP_NODISCARD TimingsType getLatencyTimingsLegacyNV( Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+#endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
+
+    // wrapper function for command vkGetSleepStatusLegacyNV, see https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSleepStatusLegacyNV.html
+    template <typename Dispatch = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE, typename std::enable_if<IS_DISPATCHED( vkGetSleepStatusLegacyNV ), bool>::type = true>
+    void getSleepStatusLegacyNV( Bool32 * pLowLatencyMode, Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+#ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
+    // wrapper function for command vkGetSleepStatusLegacyNV, see https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetSleepStatusLegacyNV.html
+    template <typename Dispatch = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE, typename std::enable_if<IS_DISPATCHED( vkGetSleepStatusLegacyNV ), bool>::type = true>
+    VULKAN_HPP_NODISCARD Bool32 getSleepStatusLegacyNV( Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+#endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
+
+    // wrapper function for command vkShutdownLatencyDeviceLegacyNV, see
+    // https://registry.khronos.org/vulkan/specs/latest/man/html/vkShutdownLatencyDeviceLegacyNV.html
+    template <typename Dispatch                                                                     = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE,
+              typename std::enable_if<IS_DISPATCHED( vkShutdownLatencyDeviceLegacyNV ), bool>::type = true>
+    void shutdownLatencyLegacyNV( Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+
 #if defined( VK_USE_PLATFORM_METAL_EXT )
     //=== VK_EXT_metal_objects ===
 
@@ -22780,6 +22850,40 @@ VULKAN_HPP_EXPORT namespace VULKAN_HPP_NAMESPACE
         DataGraphOpticalFlowImageFormatInfoARM const &                opticalFlowImageFormatInfo,
         DataGraphOpticalFlowImageFormatPropertiesARMAllocator const & dataGraphOpticalFlowImageFormatPropertiesARMAllocator,
         Dispatch const & d                                            VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const;
+#endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
+
+    //=== VK_EXT_cooperative_matrix_maintenance1 ===
+
+    // wrapper function for command vkGetPhysicalDeviceCooperativeMatrixProperties2EXT, see
+    // https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeMatrixProperties2EXT.html
+    template <typename Dispatch                                                                                        = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE,
+              typename std::enable_if<IS_DISPATCHED( vkGetPhysicalDeviceCooperativeMatrixProperties2EXT ), bool>::type = true>
+    VULKAN_HPP_NODISCARD Result getCooperativeMatrixProperties2EXT( PhysicalDeviceCooperativeMatrixInfo2EXT const * pCooperativeMatrixInfo,
+                                                                    uint32_t *                                      pPropertyCount,
+                                                                    CooperativeMatrixProperties2EXT *               pProperties,
+                                                                    Dispatch const & d VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const VULKAN_HPP_NOEXCEPT;
+#ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
+    // wrapper function for command vkGetPhysicalDeviceCooperativeMatrixProperties2EXT, see
+    // https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeMatrixProperties2EXT.html
+    template <typename CooperativeMatrixProperties2EXTAllocator = std::allocator<CooperativeMatrixProperties2EXT>,
+              typename Dispatch                                 = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE,
+              typename std::enable_if<std::is_same<typename CooperativeMatrixProperties2EXTAllocator::value_type, CooperativeMatrixProperties2EXT>::value,
+                                      int>::type                = 0,
+              typename std::enable_if<IS_DISPATCHED( vkGetPhysicalDeviceCooperativeMatrixProperties2EXT ), bool>::type = true>
+    VULKAN_HPP_NODISCARD typename ResultValueType<std::vector<CooperativeMatrixProperties2EXT, CooperativeMatrixProperties2EXTAllocator>>::type
+      getCooperativeMatrixProperties2EXT( PhysicalDeviceCooperativeMatrixInfo2EXT const & cooperativeMatrixInfo,
+                                          Dispatch const & d                              VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const;
+    // wrapper function for command vkGetPhysicalDeviceCooperativeMatrixProperties2EXT, see
+    // https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetPhysicalDeviceCooperativeMatrixProperties2EXT.html
+    template <typename CooperativeMatrixProperties2EXTAllocator = std::allocator<CooperativeMatrixProperties2EXT>,
+              typename Dispatch                                 = VULKAN_HPP_DEFAULT_DISPATCHER_TYPE,
+              typename std::enable_if<std::is_same<typename CooperativeMatrixProperties2EXTAllocator::value_type, CooperativeMatrixProperties2EXT>::value,
+                                      int>::type                = 0,
+              typename std::enable_if<IS_DISPATCHED( vkGetPhysicalDeviceCooperativeMatrixProperties2EXT ), bool>::type = true>
+    VULKAN_HPP_NODISCARD typename ResultValueType<std::vector<CooperativeMatrixProperties2EXT, CooperativeMatrixProperties2EXTAllocator>>::type
+      getCooperativeMatrixProperties2EXT( PhysicalDeviceCooperativeMatrixInfo2EXT const &  cooperativeMatrixInfo,
+                                          CooperativeMatrixProperties2EXTAllocator const & cooperativeMatrixProperties2EXTAllocator,
+                                          Dispatch const & d                               VULKAN_HPP_DEFAULT_DISPATCHER_ASSIGNMENT ) const;
 #endif /* VULKAN_HPP_DISABLE_ENHANCED_MODE */
 
 #if defined( VK_USE_PLATFORM_UBM_SEC )
