@@ -4,11 +4,11 @@ from conans import ConanFile
 
 
 class VulkanHeadersConan(ConanFile):
-    name = "Vulkan-Headers"
+    name = "vulkan-headers"
     version = "1.4.360"
     url = "https://github.com/Esri/Vulkan-Headers/blob/runtimecore/"
     license = "https://github.com/Esri/Vulkan-Headers/blob/runtimecore/LICENSE.md"
-    description = ("Vulkan header files and API registry")
+    description = "Vulkan header files and API registry"
 
     # Use the OS default to get the right line endings
     settings = "os"
